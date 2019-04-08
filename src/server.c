@@ -38,6 +38,7 @@
 
 #define SERVER_FILES "./serverfiles"
 #define SERVER_ROOT "./serverroot"
+#define UNUSED(x) (void)(x)
 
 /**
  * Send an HTTP response
@@ -63,6 +64,9 @@ int send_response(int fd, char *header, char *content_type, void *body, int cont
       "Connection: close\n"
       "Content-Length: %d\n"
       "Content-Type: %s\n"
+      "\n"
+      "%s",
+      header, content_length, content_type, (char *) body
     );
 
     // Send it all!
@@ -130,6 +134,24 @@ void get_file(int fd, struct cache *cache, char *request_path)
     ///////////////////
     // IMPLEMENT ME! //
     ///////////////////
+    UNUSED(cache);
+    char filepath[4096];
+    struct file_data *filedata;
+    char *mime_type;
+
+    snprintf(filepath, sizeof filepath, "%s%s", SERVER_ROOT, request_path);
+    filedata = file_load(filepath);
+    mime_type = mime_type_get(filepath);
+
+    if (filedata == NULL)
+    {
+      resp_404(fd);
+    }
+    else
+    {
+      send_response(fd, "HTTP/1.1 200 OK", mime_type, filedata -> data, filedata -> size);
+      file_free(filedata);
+    }
 }
 
 /**
@@ -167,7 +189,20 @@ void handle_http_request(int fd, struct cache *cache)
     ///////////////////
     // Read the three components of the first request line
 
+    char method[200];
+    char path[8192];
+
+    sscanf(request, "%s %s", method, path);
+
+    printf("method: %s\n", method);
+    printf("path: %s\n", path);
+
     // If GET, handle the get endpoints
+
+    if (strcmp(method, "GET") == 0)
+    {
+      get_file(fd, cache, path);
+    }
 
     //    Check if it's /d20 and handle that special case
     //    Otherwise serve the requested file by calling get_file()
