@@ -2,7 +2,7 @@
 
 In this project, we'll finish the implementation of a web server in C.
 
-What you need to write:
+What you need to write: 
 
 * HTTP request parser
 * HTTP response builder
@@ -72,7 +72,7 @@ _Read through all the main and stretch goals before writing any code to get an o
 1. Implement `send_response()`.
 
    This function is responsible for formatting all the pieces that make up an HTTP response into the proper format that clients expect. In other words, it needs to build a complete HTTP response with the given parameters. It should write the response to the string in the `response` variable.
-   
+
    The total length of the header **and** body should be stored in the `response_length` variable so that the `send()` call knows how many bytes to
    send out over the wire.
 
@@ -86,7 +86,7 @@ _Read through all the main and stretch goals before writing any code to get an o
    > the header. But the `response_length` variable used by `send()` is the
    > total length of both header and body.
 
-   You can test whether you've gotten `send_response` working by calling the `resp_404` function from somewhere inside the `main` function, and seeing if the client receives the 404 response. 
+   You can test whether you've gotten `send_response` working by calling the `resp_404` function from somewhere inside the `main` function, and seeing if the client receives the 404 response.
 
 2. Examine `handle_http_request()` in the file `server.c`.
 
@@ -185,7 +185,7 @@ The hashtable code is already written and can be found in `hashtable.c`.
    * Store it in the cache
    * Serve it
 
-There's a set of unit tests included to ensure that your cache implementation is functioning correctly. From the `src` directory, run `make tests` in order to run the unit tests against your implementation. 
+There's a set of unit tests included to ensure that your cache implementation is functioning correctly. From the `src` directory, run `make tests` in order to run the unit tests against your implementation.
 
 ### Stretch Goals
 
@@ -247,4 +247,3 @@ When a new connection comes in, launch a thread to handle it.
 Be sure to lock the cache when a thread accesses it so the threads don't step on each other's toes and corrupt the cache.
 
 Also have thread cleanup handlers to handle threads that have died.
-
