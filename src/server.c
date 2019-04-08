@@ -97,7 +97,7 @@ void get_d20(int fd)
     ///////////////////
 
     // Use send_response() to send it back as text/plain data
-    send_response(fd, "HTTP/1.1 200 OK", "text/plain", rand, strlen(rand));
+    send_response(fd, "HTTP/1.1 200 OK", "text/plain", randnum, strlen(randnum));
     ///////////////////
     // IMPLEMENT ME! //
     ///////////////////
