@@ -64,10 +64,12 @@ int send_response(int fd, char *header, char *content_type, void *body, int cont
       "Connection: close\n"
       "Content-Length: %d\n"
       "Content-Type: %s\n"
-      "\n"
-      "%s",
-      header, content_length, content_type, (char *) body
+      "\n",
+      header, content_length, content_type
     );
+
+    memcpy(response + response_length, body, content_length);
+    response_length += content_length;
 
     // Send it all!
     int rv = send(fd, response, response_length, 0);
@@ -143,6 +145,12 @@ void get_file(int fd, struct cache *cache, char *request_path)
     char *mime_type;
 
     snprintf(filepath, sizeof filepath, "%s%s", SERVER_ROOT, request_path);
+
+    if (strcmp(request_path, "/") == 0)
+    {
+      snprintf(filepath, sizeof filepath, "%s%s", SERVER_ROOT, "/index.html");
+    }
+
     filedata = file_load(filepath);
     mime_type = mime_type_get(filepath);
 
