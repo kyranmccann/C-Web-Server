@@ -157,7 +157,7 @@ void cache_put(struct cache *cache, char *path, char *content_type, void *conten
     ///////////////////
 
     struct cache_entry *ce = alloc_entry(path, content_type, content, content_length);
-    dllist_inert_head(cache, ce);
+    dllist_insert_head(cache, ce);
     hashtable_put(cache -> index, path, ce);
     cache -> cur_size += 1;
 
@@ -165,7 +165,7 @@ void cache_put(struct cache *cache, char *path, char *content_type, void *conten
     {
       struct cache_entry *previous = dllist_remove_tail(cache);
       hashtable_delete(cache -> index, previous -> path);
-      free(previous)
+      free(previous);
     }
 }
 
@@ -182,7 +182,7 @@ struct cache_entry *cache_get(struct cache *cache, char *path)
 
     if (ce == NULL)
     {
-      return NULL
+      return NULL;
     }
 
     dllist_move_to_head(cache, ce);
