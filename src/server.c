@@ -60,12 +60,16 @@ int send_response(int fd, char *header, char *content_type, void *body, int cont
     // IMPLEMENT ME! //
     ///////////////////
 
-    int response_length = snprintf(response, max_response_size, "%s\n"
+    time_t t = time(NULL);
+
+    int response_length = snprintf(response, max_response_size,
+      "%s\n"
+      "DATE: %s"
       "Connection: close\n"
       "Content-Length: %d\n"
       "Content-Type: %s\n"
       "\n",
-      header, content_length, content_type
+      header, asctime(gmtime(&t)), content_length, content_type
     );
 
     memcpy(response + response_length, body, content_length);
@@ -139,7 +143,16 @@ void get_file(int fd, struct cache *cache, char *request_path)
     ///////////////////
     // IMPLEMENT ME! //
     ///////////////////
-    UNUSED(cache);
+
+    struct cache_entry *ce = cache_get(cache, request_path);
+
+    if (ce != NULL)
+    {
+      send_response(fd, "HTTP/1.1 200 OK", ce -> content_type, ce -> content, ce -> content_length);
+    }
+
+    else
+    {
     char filepath[4096];
     struct file_data *filedata;
     char *mime_type;
@@ -163,6 +176,7 @@ void get_file(int fd, struct cache *cache, char *request_path)
       send_response(fd, "HTTP/1.1 200 OK", mime_type, filedata -> data, filedata -> size);
       file_free(filedata);
     }
+  }
 }
 
 /**
